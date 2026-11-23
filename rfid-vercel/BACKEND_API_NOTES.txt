@@ -1,0 +1,13 @@
+Existing backend API contract (from GitHub rfid-vercel/index.js)
+
+POST https://rfid-attendance-cloud.vercel.app/api/scan
+Header:
+  Content-Type: application/json
+  x-scan-key: <same secret as Vercel SCAN_KEY>
+
+JSON body:
+  {"uid":"D6E13103","device":"UENR-ATTENDANCE-01"}
+
+Backend reads req.body.uid and req.body.device.
+It looks up students.uid in Neon, inserts attendance, and responds HTTP 201
+with {"ok":true,"name":"..."} when attendance is recorded.
