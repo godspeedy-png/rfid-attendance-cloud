@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RFID Attendance · Pro</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <!-- Google Font & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ---------- DAY / NIGHT THEME ---------- */
+        :root {
+            --bg-body: #f1f5f9;
+            --bg-sidebar: #0b1120;
+            --text-sidebar: #e2e8f0;
+            --nav-hover: #1e293b;
+            --nav-active: #1e293b;
+            --bg-main: #f1f5f9;
+            --text-main: #0f172a;
+            --bg-card: #ffffff;
+            --border-card: #eef2f6;
+            --bg-table-head: #f8fafc;
+            --text-table-head: #475569;
+            --border-table: #f1f5f9;
+            --input-bg: #ffffff;
+            --input-border: #e2e8f0;
+            --input-focus: #2563eb;
+            --shadow-card: 0 8px 20px -6px rgba(0, 0, 0, 0.04);
+            --panel-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.04);
+            --status-present-bg: #dcfce7;
+            --status-present-text: #166534;
+            --status-absent-bg: #fee2e2;
+            --status-absent-text: #991b1b;
+            --notice-bg: #eff6ff;
+            --notice-border: #2563eb;
+            --notice-text: #1e3a8a;
+            --modal-bg: #ffffff;
+            --modal-overlay: rgba(11, 17, 32, 0.7);
+            --device-indicator-bg: #dcfce7;
+            --device-indicator-text: #166534;
+            --btn-outline-bg: #f8fafc;
+            --btn-outline-border: #e2e8f0;
+            --btn-outline-hover: #f1f5f9;
+            --mono-bg: #f1f5f9;
+            --top-bar-heading: #0b1120;
+            --subhead: #64748b;
+            --stat-label: #64748b;
+            --empty-state: #94a3b8;
+            --admin-badge-bg: #ffffff;
+            --admin-badge-border: #e2e8f0;
+            --admin-badge-text: #0f172a;
+            --btn-primary-bg: #2563eb;
+            --btn-primary-hover: #1d4ed8;
+            --btn-primary-text: #ffffff;
+            --btn-danger-bg: #fee2e2;
+            --btn-danger-text: #b91c1c;
+            --btn-danger-hover: #fecaca;
+            --logo-highlight: #3b82f6;
+            --logo-main: #f8fafc;
+            --sidebar-border: #1e293b;
+            --input-placeholder: #94a3b8;
+            --modal-label: #475569;
+            --device-online: #22c55e;
+            --quick-action-icon: #d97706;
+            --table-strong: #0f172a;
+            --table-mono: #0f172a;
+            --photo-border: #e2e8f0;
+            --photo-bg: #f8fafc;
+            --camera-btn-bg: #f1f5f9;
+            --camera-btn-text: #1e293b;
+            --camera-btn-hover: #e2e8f0;
+        }
+
+        body.night-mode {
+            --bg-body: #0b1120;
+            --bg-sidebar: #0f172a;
+            --text-sidebar: #cbd5e1;
+            --nav-hover: #1e293b;
+            --nav-active: #1e293b;
+            --bg-main: #0b1120;
+            --text-main: #e2e8f0;
+            --bg-card: #111827;
+            --border-card: #1f2937;
+            --bg-table-head: #1f2937;
+            --text-table-head: #9ca3af;
+            --border-table: #1f2937;
+            --input-bg: #1f2937;
+            --input-border: #374151;
+            --input-focus: #3b82f6;
+            --shadow-card: 0 8px 20px -6px rgba(0, 0, 0, 0.4);
+            --panel-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.4);
+            --status-present-bg: #064e3b;
+            --status-present-text: #6ee7b7;
+            --status-absent-bg: #7f1d1d;
+            --status-absent-text: #fca5a5;
+            --notice-bg: #1e3a8a20;
+            --notice-border: #3b82f6;
+            --notice-text: #93c5fd;
+            --modal-bg: #111827;
+            --modal-overlay: rgba(0, 0, 0, 0.8);
+            --device-indicator-bg: #064e3b;
+            --device-indicator-text: #6ee7b7;
+            --btn-outline-bg: #1f2937;
+            --btn-outline-border: #374151;
+            --btn-outline-hover: #2d3748;
+            --mono-bg: #1f2937;
+            --top-bar-heading: #f1f5f9;
+            --subhead: #94a3b8;
+            --stat-label: #9ca3af;
+            --empty-state: #6b7280;
+            --admin-badge-bg: #1f2937;
+            --admin-badge-border: #374151;
+            --admin-badge-text: #e2e8f0;
+            --btn-primary-bg: #3b82f6;
+            --btn-primary-hover: #2563eb;
+            --btn-primary-text: #ffffff;
+            --btn-danger-bg: #7f1d1d;
+            --btn-danger-text: #fca5a5;
+            --btn-danger-hover: #991b1b;
+            --logo-highlight: #60a5fa;
+            --logo-main: #f1f5f9;
+            --sidebar-border: #1f2937;
+            --input-placeholder: #6b7280;
+            --modal-label: #9ca3af;
+            --device-online: #4ade80;
+            --quick-action-icon: #fbbf24;
+            --table-strong: #f1f5f9;
+            --table-mono: #e2e8f0;
+            --photo-border: #374151;
+            --photo-bg: #1f2937;
+            --camera-btn-bg: #374151;
+            --camera-btn-text: #e2e8f0;
+            --camera-btn-hover: #4b5563;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.5;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ---------- SIDEBAR ---------- */
+        .sidebar {
+            width: 270px;
+            background: var(--bg-sidebar);
+            color: var(--text-sidebar);
+            padding: 2rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            flex-shrink: 0;
+            border-right: 1px solid var(--sidebar-border);
+            transition: background 0.2s;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: var(--logo-highlight);
+            font-size: 1.7rem;
+        }
+
+        .logo span {
+            color: var(--logo-main);
+        }
+
+        .logo .highlight {
+            color: var(--logo-highlight);
+            font-weight: 800;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav button {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding: 0.85rem 1rem;
+            text-align: left;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.15s;
+        }
+
+        .nav button i {
+            width: 20px;
+            font-size: 1.1rem;
+        }
+
+        .nav button.active {
+            background: var(--nav-active);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav button:hover {
+            background: var(--nav-hover);
+            color: #ffffff;
+        }
+
+        .theme-toggle {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.6rem 1rem;
+            border-radius: 40px;
+            background: var(--nav-hover);
+            color: var(--text-sidebar);
+            cursor: pointer;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: 0.15s;
+            width: fit-content;
+        }
+
+        .theme-toggle:hover {
+            background: #1e293b;
+        }
+
+        .theme-toggle i {
+            font-size: 1rem;
+        }
+
+        /* ---------- MAIN ---------- */
+        .main {
+            flex: 1;
+            padding: 2rem 2.2rem;
+            overflow-x: auto;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .top-bar h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--top-bar-heading);
+        }
+
+        .top-bar .subhead {
+            font-size: 0.9rem;
+            color: var(--subhead);
+            margin-top: 0.25rem;
+            font-weight: 400;
+        }
+
+        .admin-badge {
+            background: var(--admin-badge-bg);
+            padding: 0.6rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--admin-badge-text);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--admin-badge-border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-badge i {
+            color: #3b82f6;
+        }
+
+        /* ---------- CARDS ---------- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: 22px;
+            padding: 1.5rem 1.5rem;
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border-card);
+            transition: transform 0.1s, background 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--stat-label);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stat-label i {
+            font-size: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .stat-blue .stat-number { color: #2563eb; }
+        .stat-green .stat-number { color: #059669; }
+        .stat-red .stat-number { color: #dc2626; }
+        .stat-amber .stat-number { color: #d97706; }
+
+        /* ---------- PANELS ---------- */
+        .panel {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 1.8rem 1.8rem;
+            margin-bottom: 1.8rem;
+            border: 1px solid var(--border-card);
+            box-shadow: var(--panel-shadow);
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .panel-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--top-bar-heading);
+            letter-spacing: -0.01em;
+        }
+
+        .btn {
+            border: none;
+            padding: 0.65rem 1.3rem;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.15s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--btn-primary-bg);
+            color: var(--btn-primary-text);
+            box-shadow: 0 4px 10px -2px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--btn-primary-hover);
+        }
+
+        .btn-outline {
+            background: var(--btn-outline-bg);
+            color: var(--table-strong);
+            border: 1px solid var(--btn-outline-border);
+        }
+
+        .btn-outline:hover {
+            background: var(--btn-outline-hover);
+        }
+
+        .btn-danger {
+            background: var(--btn-danger-bg);
+            color: var(--btn-danger-text);
+            padding: 0.4rem 0.9rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-danger:hover {
+            background: var(--btn-danger-hover);
+        }
+
+        .btn-icon-sm {
+            padding: 0.4rem 0.9rem;
+            font-size: 0.8rem;
+            border-radius: 30px;
+        }
+
+        /* ---------- TABLE ---------- */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        th {
+            text-align: left;
+            padding: 0.9rem 1rem;
+            background: var(--bg-table-head);
+            color: var(--text-table-head);
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            border-bottom: 1px solid var(--border-table);
+        }
+
+        td {
+            padding: 0.95rem 1rem;
+            border-bottom: 1px solid var(--border-table);
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 0.3rem 0.9rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: var(--status-present-bg);
+            color: var(--status-present-text);
+        }
+
+        .status-pill.absent {
+            background: var(--status-absent-bg);
+            color: var(--status-absent-text);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--empty-state);
+            font-size: 0.95rem;
+        }
+
+        /* ---------- FILTERS ---------- */
+        .filter-row {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        input, select {
+            font-family: 'Inter', sans-serif;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--input-border);
+            border-radius: 40px;
+            background: var(--input-bg);
+            font-size: 0.9rem;
+            color: var(--text-main);
+            outline: none;
+            transition: 0.1s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        input::placeholder {
+            color: var(--input-placeholder);
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        /* ---------- DEVICE ---------- */
+        .device-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--device-indicator-bg);
+            color: var(--device-indicator-text);
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .device-indicator i {
+            font-size: 0.6rem;
+            color: var(--device-online);
+        }
+
+        .notice-box {
+            background: var(--notice-bg);
+            border-left: 4px solid var(--notice-border);
+            padding: 1rem 1.2rem;
+            border-radius: 12px;
+            color: var(--notice-text);
+            font-size: 0.9rem;
+            margin-bottom: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notice-box i {
+            font-size: 1.2rem;
+            color: var(--notice-border);
+        }
+
+        /* ---------- MODAL ---------- */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: var(--modal-overlay);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            z-index: 100;
+        }
+
+        .modal.open {
+            display: flex;
+        }
+
+        .modal-card {
+            background: var(--modal-bg);
+            border-radius: 28px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 520px;
+            box-shadow: 0 40px 70px -20px rgba(0, 0, 0, 0.4);
+            animation: modalIn 0.2s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .modal-card label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--modal-label);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            display: block;
+            margin-bottom: 0.4rem;
+        }
+
+        .modal-card input {
+            width: 100%;
+            border-radius: 14px;
+            margin-bottom: 1.2rem;
+            padding: 0.8rem 1rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        /* ---------- PHOTO & CAMERA ---------- */
+        .photo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            border: 2px dashed var(--photo-border);
+            border-radius: 20px;
+            background: var(--photo-bg);
+        }
+
+        .photo-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--mono-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 2px solid var(--border-card);
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo-preview i {
+            font-size: 2.5rem;
+            color: var(--empty-state);
+        }
+
+        .camera-btn {
+            background: var(--camera-btn-bg);
+            color: var(--camera-btn-text);
+            border: 1px solid var(--btn-outline-border);
+            padding: 0.6rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.15s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .camera-btn:hover {
+            background: var(--camera-btn-hover);
+        }
+
+        .camera-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .camera-container.active {
+            display: flex;
+        }
+
+        .camera-container video {
+            width: 100%;
+            max-width: 260px;
+            border-radius: 16px;
+            border: 2px solid var(--border-card);
+            background: #000;
+        }
+
+        .camera-actions {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .scan-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--device-indicator-bg);
+            color: var(--device-indicator-text);
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        .scan-indicator i {
+            font-size: 0.6rem;
+        }
+
+        /* ---------- TABLE PHOTO ---------- */
+        .table-photo {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: var(--mono-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 1px solid var(--border-card);
+        }
+
+        .table-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .table-photo i {
+            font-size: 0.9rem;
+            color: var(--empty-state);
+        }
+
+        .student-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .student-cell .table-photo {
+            flex-shrink: 0;
+        }
+
+        /* ---------- RESPONSIVE ---------- */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 1.2rem 1rem;
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.8rem;
+                border-right: none;
+                border-bottom: 1px solid var(--sidebar-border);
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 0.3rem;
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+
+            .nav button {
+                padding: 0.6rem 1rem;
+                font-size: 0.8rem;
+                flex: 1 1 auto;
+                justify-content: center;
+            }
+
+            .theme-toggle {
+                margin-top: 0;
+                margin-left: auto;
+                font-size: 0.75rem;
+                padding: 0.4rem 0.8rem;
+            }
+
+            .main {
+                padding: 1.5rem 1rem;
+            }
+
+            .top-bar h1 {
+                font-size: 1.5rem;
+            }
+
+            .stats-grid {
+                gap: 0.8rem;
+            }
+
+            .stat-card {
+                padding: 1.2rem 1rem;
+            }
+
+            .stat-number {
+                font-size: 1.9rem;
+            }
+
+            .panel {
+                padding: 1.2rem 1rem;
+            }
+
+            .panel-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-row {
+                flex-direction: column;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+        }
+
+        /* ---------- LOGIN ---------- */
+        .login-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-body);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            z-index: 200;
+        }
+
+        .login-error {
+            color: var(--status-absent-text);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            min-height: 1.2rem;
+        }
+
+        .login-link {
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .login-link a {
+            color: var(--input-focus);
+        }
+
+        /* Utility */
+        .hide {
+            display: none !important;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .mt-1 { margin-top: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-id-card"></i>
+                <span>RFID<span class="highlight">.pro</span></span>
+            </div>
+            <div class="nav">
+                <button class="active" data-page="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</button>
+                <button data-page="students"><i class="fas fa-user-graduate"></i> Students</button>
+                <button data-page="attendance"><i class="fas fa-calendar-check"></i> Attendance</button>
+                <button data-page="device"><i class="fas fa-microchip"></i> Device Status</button>
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i> <span>Night mode</span>
+            </button>
+            <button class="theme-toggle" id="logoutBtn" style="margin-top: 0.5rem;">
+                <i class="fas fa-right-from-bracket"></i> <span>Log out</span>
+            </button>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main">
+            <!-- TOP BAR -->
+            <div class="top-bar">
+                <div>
+                    <h1 id="pageTitle">Dashboard</h1>
+                    <div class="subhead" id="pageSub">Overview of attendance & students</div>
+                </div>
+                <div class="admin-badge">
+                    <i class="fas fa-user-shield"></i> Administrator
+                </div>
+            </div>
+
+            <!-- PAGES -->
+            <!-- DASHBOARD -->
+            <section id="page-dashboard" class="page active">
+                <div class="stats-grid">
+                    <div class="stat-card stat-blue">
+                        <div class="stat-label"><i class="fas fa-users"></i> Total Students</div>
+                        <div class="stat-number" id="totalStudents">0</div>
+                    </div>
+                    <div class="stat-card stat-green">
+                        <div class="stat-label"><i class="fas fa-check-circle"></i> Present Today</div>
+                        <div class="stat-number" id="presentToday">0</div>
+                    </div>
+                    <div class="stat-card stat-red">
+                        <div class="stat-label"><i class="fas fa-clock"></i> Absent Today</div>
+                        <div class="stat-number" id="absentToday">0</div>
+                    </div>
+                    <div class="stat-card stat-amber">
+                        <div class="stat-label"><i class="fas fa-percent"></i> Attendance Rate</div>
+                        <div class="stat-number" id="attendanceRate">0%</div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-history" style="margin-right: 8px; color: #2563eb;"></i> Recent Attendance</h2>
+                        <button class="btn btn-outline btn-icon-sm" id="viewAllRecent"><i class="fas fa-arrow-right"></i> View all</button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Student</th><th>RFID UID</th><th>Date</th><th>Time</th><th>Status</th></tr>
+                            </thead>
+                            <tbody id="recentAttendanceBody">
+                                <tr><td colspan="5" class="empty-state">No recent records</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-bolt" style="margin-right: 8px; color: #d97706;"></i> Quick Actions</h2>
+                    </div>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button class="btn btn-primary" id="quickRegisterBtn"><i class="fas fa-plus-circle"></i> Register Student</button>
+                        <button class="btn btn-outline" id="quickSimulateBtn"><i class="fas fa-wifi"></i> Simulate RFID Scan</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STUDENTS -->
+            <section id="page-students" class="page">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-user-graduate" style="margin-right: 8px; color: #2563eb;"></i> Registered Students</h2>
+                        <button class="btn btn-primary" id="addStudentBtn"><i class="fas fa-plus"></i> Add Student</button>
+                    </div>
+                    <div class="filter-row">
+                        <input type="text" id="studentSearch" class="search-input" placeholder="🔍 Search by name, ID or RFID...">
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Photo</th><th>Name</th><th>Student ID</th><th>RFID UID</th><th>Course</th><th style="text-align: right;">Actions</th></tr>
+                            </thead>
+                            <tbody id="studentTableBody">
+                                <tr><td colspan="6" class="empty-state">Loading students...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ATTENDANCE -->
+            <section id="page-attendance" class="page">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-calendar-check" style="margin-right: 8px; color: #2563eb;"></i> Attendance Records</h2>
+                        <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
+                            <button class="btn btn-outline" id="simulateFromAttendance"><i class="fas fa-wifi"></i> Simulate Scan</button>
+                            <button class="btn btn-primary" id="closeDayBtn"><i class="fas fa-moon"></i> Close Day</button>
+                            <button class="btn btn-outline" id="exportCsvBtn"><i class="fas fa-file-csv"></i> Export CSV</button>
+                        </div>
+                    </div>
+                    <div class="filter-row">
+                        <input type="text" id="attendanceSearch" class="search-input" placeholder="🔍 Search by student or RFID...">
+                        <select id="statusFilter">
+                            <option value="all">All statuses</option>
+                            <option value="Present">Present</option>
+                            <option value="Absent">Absent</option>
+                        </select>
+                        <input type="date" id="dateFilter">
+                        <button class="btn btn-outline" id="clearDateBtn">Clear date</button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Photo</th><th>Student</th><th>RFID UID</th><th>Date</th><th>Time</th><th>Status</th></tr>
+                            </thead>
+                            <tbody id="attendanceTableBody">
+                                <tr><td colspan="6" class="empty-state">No attendance records</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DEVICE -->
+            <section id="page-device" class="page">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-microchip" style="margin-right: 8px; color: #2563eb;"></i> Device Status</h2>
+                    </div>
+                    <div class="notice-box">
+                        <i class="fas fa-circle-info"></i>
+                        The RFID reader is connected and listening. Any scan automatically records attendance.
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>Device</th><th>Status</th><th>Last Activity</th></tr>
+                            </thead>
+                            <tbody id="deviceTableBody">
+                                <tr><td colspan="3" class="empty-state">No device data</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="login-overlay hide" id="loginOverlay">
+        <div class="modal-card">
+            <h3><i class="fas fa-lock"></i> Admin Login</h3>
+            <label>Username</label>
+            <input type="text" id="loginUser" autocomplete="username">
+            <label>Password</label>
+            <input type="password" id="loginPass" autocomplete="current-password">
+            <div class="login-error" id="loginError"></div>
+            <button class="btn btn-primary" id="loginBtn" style="width: 100%; justify-content: center;">Log in</button>
+            <p class="login-link"><a href="/student.html">Student? Log in here</a></p>
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal" id="studentModal">
+        <div class="modal-card">
+            <h3 id="modalTitle">Register New Student</h3>
+
+            <!-- Photo / Camera Section -->
+            <div class="photo-section" id="photoSection">
+                <div class="photo-preview" id="photoPreview">
+                    <i class="fas fa-camera"></i>
+                </div>
+                <div class="camera-container" id="cameraContainer">
+                    <video id="cameraVideo" autoplay playsinline></video>
+                    <div class="camera-actions">
+                        <button class="camera-btn" id="captureBtn"><i class="fas fa-camera"></i> Capture</button>
+                        <button class="camera-btn" id="closeCameraBtn"><i class="fas fa-times"></i> Close</button>
+                    </div>
+                </div>
+                <button class="camera-btn" id="openCameraBtn"><i class="fas fa-camera"></i> Take Photo</button>
+            </div>
+
+            <label>Full Name</label>
+            <input type="text" id="inputName" placeholder="e.g. Jane Doe" autocomplete="off">
+            <label>Student ID</label>
+            <input type="text" id="inputStudentId" placeholder="e.g. STU-2024-001" autocomplete="off">
+            <label>RFID UID</label>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input type="text" id="inputUid" placeholder="e.g. A1B2C3D4" autocomplete="off" style="flex:1;">
+                <button class="btn btn-outline btn-icon-sm" id="scanUidBtn" style="white-space: nowrap;"><i class="fas fa-wifi"></i> Scan</button>
+            </div>
+            <div id="scanStatus" class="scan-indicator" style="display: none;"><i class="fas fa-circle"></i> Waiting for card...</div>
+            <label>Course</label>
+            <input type="text" id="inputCourse" placeholder="e.g. Computer Science" autocomplete="off">
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="modalCancelBtn">Cancel</button>
+                <button class="btn btn-primary" id="modalSaveBtn">Save Student</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- STATE ----------
+            let students = [];
+            let attendance = [];
+            let deviceLog = [];
+            let stats = { total: 0, present: 0, absent: 0, rate: 0 };
+            let editingIndex = -1;
+
+            // Photo state
+            let currentPhotoDataUrl = null;
+            let cameraStream = null;
+            let scanTimeout = null;
+
+            // ---------- HELPERS ----------
+
+            // Makes text safe to put inside HTML, so a name can never run code
+            function esc(value) {
+                return String(value == null ? '' : value).replace(/[&<>"']/g, function (c) {
+                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+                });
+            }
+
+            function photoHtml(photo) {
+                if (typeof photo === 'string' && photo.indexOf('data:image/') === 0) {
+                    return '<img src="' + esc(photo) + '" alt="">';
+                }
+                return '<i class="fas fa-user"></i>';
+            }
+
+            function getStudentByUid(uid) {
+                return students.find(function (s) { return s.uid === uid; });
+            }
+
+            // Talks to the server and returns the answer
+            async function api(url, options) {
+                const res = await fetch(url, Object.assign({
+                    headers: { 'Content-Type': 'application/json' }
+                }, options));
+
+                const text = await res.text();
+                let data = null;
+                try { data = JSON.parse(text); } catch (e) {}
+
+                if (data === null) {
+                    throw new Error('The server sent an unexpected reply (' + res.status + '). The API may not be deployed correctly.');
+                }
+                if (res.status === 401) {
+                    showLogin();
+                    throw new Error('Please log in');
+                }
+                if (!res.ok) throw new Error(data.error || 'Request failed');
+                return data;
+            }
+
+            // Fetches everything from the server, then redraws the page
+            async function loadAll() {
+                try {
+                    const results = await Promise.all([
+                        api('/api/students'),
+                        api('/api/attendance'),
+                        api('/api/devices'),
+                        api('/api/stats')
+                    ]);
+                    students = results[0];
+                    attendance = results[1];
+                    deviceLog = results[2];
+                    stats = results[3];
+                    renderDashboard();
+                    renderStudents();
+                    renderAttendance();
+                    renderDevice();
+                } catch (e) {
+                    if (e.message !== 'Please log in') alert('Could not load data: ' + e.message);
+                }
+            }
+
+            // ---------- NAVIGATION ----------
+            const pageTitles = {
+                dashboard: "Dashboard",
+                students: "Students",
+                attendance: "Attendance Records",
+                device: "Device Status"
+            };
+
+            const pageSubs = {
+                dashboard: "Overview of attendance & students",
+                students: "Manage registered students and RFID tags",
+                attendance: "Daily attendance logs and records",
+                device: "Monitor RFID reader status"
+            };
+
+            function showPage(pageId) {
+                document.querySelectorAll('.page').forEach(function (p) { p.classList.remove('active'); });
+                document.getElementById('page-' + pageId).classList.add('active');
+
+                document.querySelectorAll('.nav button').forEach(function (b) { b.classList.remove('active'); });
+                const navBtn = document.querySelector('.nav button[data-page="' + pageId + '"]');
+                if (navBtn) navBtn.classList.add('active');
+
+                document.getElementById('pageTitle').textContent = pageTitles[pageId] || "Dashboard";
+                document.getElementById('pageSub').textContent = pageSubs[pageId] || "";
+
+                if (pageId === 'dashboard') renderDashboard();
+                if (pageId === 'students') renderStudents();
+                if (pageId === 'attendance') renderAttendance();
+                if (pageId === 'device') renderDevice();
+            }
+
+            // ---------- DASHBOARD ----------
+            function renderDashboard() {
+                document.getElementById('totalStudents').textContent = stats.total;
+                document.getElementById('presentToday').textContent = stats.present;
+                document.getElementById('absentToday').textContent = stats.absent;
+                document.getElementById('attendanceRate').textContent = stats.rate + "%";
+
+                const recent = attendance.slice(0, 5);
+                const tbody = document.getElementById('recentAttendanceBody');
+                tbody.innerHTML = recent.length ? recent.map(function (a) {
+                    const student = getStudentByUid(a.uid);
+                    return '<tr>' +
+                        '<td><div class="student-cell">' +
+                            '<div class="table-photo">' + photoHtml(student && student.photo) + '</div>' +
+                            '<strong>' + esc(a.name) + '</strong>' +
+                        '</div></td>' +
+                        '<td>' + esc(a.uid) + '</td>' +
+                        '<td>' + esc(a.date) + '</td>' +
+                        '<td>' + esc(a.time) + '</td>' +
+                        '<td><span class="status-pill ' + (a.status === 'Present' ? '' : 'absent') + '">' + esc(a.status) + '</span></td>' +
+                    '</tr>';
+                }).join('') : '<tr><td colspan="5" class="empty-state">No recent records</td></tr>';
+            }
+
+            // ---------- STUDENTS ----------
+            function renderStudents() {
+                const searchBox = document.getElementById('studentSearch');
+                const q = (searchBox ? searchBox.value : "").toLowerCase();
+                const filtered = students.filter(function (s) {
+                    return String(s.name).toLowerCase().includes(q) ||
+                        String(s.id).toLowerCase().includes(q) ||
+                        String(s.uid).toLowerCase().includes(q);
+                });
+
+                const tbody = document.getElementById('studentTableBody');
+                if (!tbody) return;
+
+                if (filtered.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No students match your search</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = filtered.map(function (s) {
+                    const realIndex = students.indexOf(s);
+                    return '<tr>' +
+                        '<td><div class="table-photo">' + photoHtml(s.photo) + '</div></td>' +
+                        '<td><strong>' + esc(s.name) + '</strong></td>' +
+                        '<td>' + esc(s.id) + '</td>' +
+                        '<td><span style="font-family: monospace; background: var(--mono-bg); padding: 3px 8px; border-radius: 6px;">' + esc(s.uid) + '</span></td>' +
+                        '<td>' + esc(s.course) + '</td>' +
+                        '<td style="text-align: right;">' +
+                            '<button class="btn btn-outline btn-icon-sm" onclick="window.__editStudent(' + realIndex + ')"><i class="fas fa-pen"></i></button> ' +
+                            '<button class="btn btn-danger" onclick="window.__deleteStudent(' + realIndex + ')"><i class="fas fa-trash-can"></i></button>' +
+                        '</td>' +
+                    '</tr>';
+                }).join('');
+            }
+
+            // ---------- ATTENDANCE ----------
+            function renderAttendance() {
+                const searchBox = document.getElementById('attendanceSearch');
+                const statusBox = document.getElementById('statusFilter');
+                const dateBox = document.getElementById('dateFilter');
+                const q = (searchBox ? searchBox.value : "").toLowerCase();
+                const status = statusBox ? statusBox.value : "all";
+                const dateVal = dateBox ? dateBox.value : "";
+
+                let filtered = attendance.filter(function (a) {
+                    return String(a.name).toLowerCase().includes(q) || String(a.uid).toLowerCase().includes(q);
+                });
+                if (status !== "all") filtered = filtered.filter(function (a) { return a.status === status; });
+                if (dateVal) filtered = filtered.filter(function (a) { return a.date === dateVal; });
+
+                const tbody = document.getElementById('attendanceTableBody');
+                if (!tbody) return;
+
+                if (filtered.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No attendance records found</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = filtered.map(function (a) {
+                    const student = getStudentByUid(a.uid);
+                    return '<tr>' +
+                        '<td><div class="table-photo">' + photoHtml(student && student.photo) + '</div></td>' +
+                        '<td><strong>' + esc(a.name) + '</strong></td>' +
+                        '<td><span style="font-family: monospace; background: var(--mono-bg); padding: 3px 8px; border-radius: 6px;">' + esc(a.uid) + '</span></td>' +
+                        '<td>' + esc(a.date) + '</td>' +
+                        '<td>' + esc(a.time) + '</td>' +
+                        '<td><span class="status-pill ' + (a.status === 'Present' ? '' : 'absent') + '">' + esc(a.status) + '</span></td>' +
+                    '</tr>';
+                }).join('');
+            }
+
+            // ---------- DEVICE ----------
+            function renderDevice() {
+                const tbody = document.getElementById('deviceTableBody');
+                if (!tbody) return;
+                if (!deviceLog.length) {
+                    tbody.innerHTML = '<tr><td colspan="3" class="empty-state">No device data yet. It appears after the first scan.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = deviceLog.map(function (d) {
+                    return '<tr>' +
+                        '<td><i class="fas fa-microchip" style="color: #2563eb; margin-right: 8px;"></i>' + esc(d.device) + '</td>' +
+                        '<td><span class="device-indicator"><i class="fas fa-circle"></i> ' + esc(d.status) + '</span></td>' +
+                        '<td>' + esc(d.last) + '</td>' +
+                    '</tr>';
+                }).join('');
+            }
+
+            // ---------- PHOTO / CAMERA ----------
+            const photoPreview = document.getElementById('photoPreview');
+            const cameraContainer = document.getElementById('cameraContainer');
+            const cameraVideo = document.getElementById('cameraVideo');
+            const openCameraBtn = document.getElementById('openCameraBtn');
+            const captureBtn = document.getElementById('captureBtn');
+            const closeCameraBtn = document.getElementById('closeCameraBtn');
+
+            function resetPhotoPreview() {
+                currentPhotoDataUrl = null;
+                photoPreview.innerHTML = '<i class="fas fa-camera"></i>';
+            }
+
+            function showPhoto(dataUrl) {
+                currentPhotoDataUrl = dataUrl;
+                photoPreview.innerHTML = photoHtml(dataUrl);
+            }
+
+            async function startCamera() {
+                try {
+                    cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 320, height: 240 } });
+                    cameraVideo.srcObject = cameraStream;
+                    cameraContainer.classList.add('active');
+                    openCameraBtn.style.display = 'none';
+                } catch (err) {
+                    alert('Could not access camera: ' + err.message);
+                }
+            }
+
+            function stopCamera() {
+                if (cameraStream) {
+                    cameraStream.getTracks().forEach(function (track) { track.stop(); });
+                    cameraStream = null;
+                }
+                cameraVideo.srcObject = null;
+                cameraContainer.classList.remove('active');
+                openCameraBtn.style.display = 'inline-flex';
+            }
+
+            function capturePhoto() {
+                if (!cameraStream) return;
+                const canvas = document.createElement('canvas');
+                canvas.width = cameraVideo.videoWidth || 320;
+                canvas.height = cameraVideo.videoHeight || 240;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(cameraVideo, 0, 0, canvas.width, canvas.height);
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                showPhoto(dataUrl);
+                stopCamera();
+            }
+
+            openCameraBtn.addEventListener('click', startCamera);
+            captureBtn.addEventListener('click', capturePhoto);
+            closeCameraBtn.addEventListener('click', stopCamera);
+
+            // ---------- MODAL ----------
+            const modal = document.getElementById('studentModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const inputName = document.getElementById('inputName');
+            const inputStudentId = document.getElementById('inputStudentId');
+            const inputUid = document.getElementById('inputUid');
+            const inputCourse = document.getElementById('inputCourse');
+            const scanUidBtn = document.getElementById('scanUidBtn');
+            const scanStatus = document.getElementById('scanStatus');
+
+            function openModal(editIndex) {
+                editIndex = (editIndex === undefined) ? -1 : editIndex;
+                editingIndex = editIndex;
+                resetPhotoPreview();
+                if (editIndex === -1) {
+                    modalTitle.textContent = "Register New Student";
+                    inputName.value = '';
+                    inputStudentId.value = '';
+                    inputUid.value = '';
+                    inputCourse.value = '';
+                } else {
+                    const s = students[editIndex];
+                    modalTitle.textContent = "Edit Student";
+                    inputName.value = s.name;
+                    inputStudentId.value = s.id;
+                    inputUid.value = s.uid;
+                    inputCourse.value = s.course;
+                    if (s.photo) {
+                        showPhoto(s.photo);
+                    }
+                }
+                modal.classList.add('open');
+                inputName.focus();
+            }
+
+            function closeModal() {
+                modal.classList.remove('open');
+                editingIndex = -1;
+                stopCamera();
+                scanStatus.style.display = 'none';
+                if (scanTimeout) clearTimeout(scanTimeout);
+            }
+
+            async function saveStudent() {
+                const body = {
+                    name: inputName.value.trim(),
+                    id: inputStudentId.value.trim(),
+                    uid: inputUid.value.trim(),
+                    course: inputCourse.value.trim(),
+                    photo: currentPhotoDataUrl
+                };
+
+                if (!body.name || !body.id || !body.uid) {
+                    alert("Please fill in name, student ID, and RFID UID.");
+                    return;
+                }
+
+                try {
+                    if (editingIndex === -1) {
+                        await api('/api/students', { method: 'POST', body: JSON.stringify(body) });
+                    } else {
+                        const pk = students[editingIndex].pk;
+                        await api('/api/students/' + pk, { method: 'PUT', body: JSON.stringify(body) });
+                    }
+                    closeModal();
+                    await loadAll();
+                } catch (e) {
+                    alert(e.message);
+                }
+            }
+
+            // Fills the card number box with a made-up number (for testing without a reader).
+            // With a real card, type the number the reader prints in the Serial Monitor.
+            function simulateRegistrationScan() {
+                const randomUid = Array.from({ length: 4 }, function () {
+                    return Math.floor(Math.random() * 256).toString(16).padStart(2, '0');
+                }).join('').toUpperCase();
+                inputUid.value = randomUid;
+                scanStatus.style.display = 'flex';
+                scanStatus.innerHTML = '<i class="fas fa-circle"></i> Test card number: ' + esc(randomUid);
+                if (scanTimeout) clearTimeout(scanTimeout);
+                scanTimeout = setTimeout(function () { scanStatus.style.display = 'none'; }, 3000);
+            }
+
+            // expose global functions for inline onclick
+            window.__editStudent = function (index) {
+                openModal(index);
+            };
+
+            window.__deleteStudent = async function (index) {
+                if (!confirm("Delete this student? This action cannot be undone.")) return;
+                try {
+                    await api('/api/students/' + students[index].pk, { method: 'DELETE' });
+                    await loadAll();
+                } catch (e) {
+                    alert(e.message);
+                }
+            };
+
+            // ---------- SIMULATE SCAN (attendance) ----------
+            async function simulateScan() {
+                if (students.length === 0) {
+                    alert("No students registered. Please add a student first.");
+                    return;
+                }
+
+                const s = students[Math.floor(Math.random() * students.length)];
+
+                try {
+                    const result = await api('/api/scan', {
+                        method: 'POST',
+                        body: JSON.stringify({ uid: s.uid })
+                    });
+                    alert("✅ RFID Scan detected!\n" + result.name + " marked Present.");
+                } catch (e) {
+                    alert(e.message);
+                }
+
+                await loadAll();
+            }
+
+            // ---------- CLOSE DAY ----------
+            async function closeDay() {
+                if (!confirm("Close the day? Everyone who has not scanned today will be marked Absent.")) return;
+
+                try {
+                    const result = await api('/api/close-day', { method: 'POST' });
+                    alert(result.markedAbsent + " student(s) marked Absent.");
+                } catch (e) {
+                    alert(e.message);
+                }
+
+                await loadAll();
+            }
+
+            // ---------- EXPORT CSV ----------
+            function exportCsv() {
+                const date = document.getElementById('dateFilter').value || '';
+                const status = document.getElementById('statusFilter').value || 'all';
+                window.location.href = '/api/export.csv?date=' + encodeURIComponent(date) + '&status=' + encodeURIComponent(status);
+            }
+
+            // ---------- LOGIN / LOGOUT ----------
+            function showLogin() {
+                document.getElementById('loginOverlay').classList.remove('hide');
+                document.getElementById('loginUser').focus();
+            }
+
+            async function doLogin() {
+                const errorBox = document.getElementById('loginError');
+                errorBox.textContent = '';
+                try {
+                    const res = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            username: document.getElementById('loginUser').value,
+                            password: document.getElementById('loginPass').value
+                        })
+                    });
+                    const text = await res.text();
+                    let data = null;
+                    try { data = JSON.parse(text); } catch (e) {}
+                    if (data === null) {
+                        errorBox.textContent = 'The server sent an unexpected reply (' + res.status + '). The API may not be deployed correctly.';
+                        return;
+                    }
+                    if (!res.ok) {
+                        errorBox.textContent = data.error || 'Login failed';
+                        return;
+                    }
+                    document.getElementById('loginPass').value = '';
+                    document.getElementById('loginOverlay').classList.add('hide');
+                    await loadAll();
+                } catch (e) {
+                    errorBox.textContent = 'Could not reach the server';
+                }
+            }
+
+            async function doLogout() {
+                try { await fetch('/api/logout', { method: 'POST' }); } catch (e) {}
+                location.reload();
+            }
+
+            // ---------- THEME TOGGLE ----------
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = themeToggle.querySelector('i');
+            const themeLabel = themeToggle.querySelector('span');
+
+            function setTheme(isNight) {
+                if (isNight) {
+                    document.body.classList.add('night-mode');
+                    themeIcon.className = 'fas fa-sun';
+                    themeLabel.textContent = 'Day mode';
+                } else {
+                    document.body.classList.remove('night-mode');
+                    themeIcon.className = 'fas fa-moon';
+                    themeLabel.textContent = 'Night mode';
+                }
+            }
+
+            try {
+                if (localStorage.getItem('rfid-theme') === 'night') setTheme(true);
+            } catch (e) {}
+
+            themeToggle.addEventListener('click', function () {
+                const isNight = !document.body.classList.contains('night-mode');
+                setTheme(isNight);
+                try { localStorage.setItem('rfid-theme', isNight ? 'night' : 'day'); } catch (e) {}
+            });
+
+            // ---------- EVENT LISTENERS ----------
+            document.querySelectorAll('.nav button').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    showPage(this.dataset.page);
+                });
+            });
+
+            document.getElementById('quickRegisterBtn').addEventListener('click', function () { openModal(); });
+            document.getElementById('quickSimulateBtn').addEventListener('click', simulateScan);
+            document.getElementById('simulateFromAttendance').addEventListener('click', simulateScan);
+            document.getElementById('closeDayBtn').addEventListener('click', closeDay);
+            document.getElementById('exportCsvBtn').addEventListener('click', exportCsv);
+            document.getElementById('addStudentBtn').addEventListener('click', function () { openModal(); });
+            document.getElementById('viewAllRecent').addEventListener('click', function () { showPage('attendance'); });
+
+            document.getElementById('studentSearch').addEventListener('input', renderStudents);
+            document.getElementById('attendanceSearch').addEventListener('input', renderAttendance);
+            document.getElementById('statusFilter').addEventListener('change', renderAttendance);
+            document.getElementById('dateFilter').addEventListener('change', renderAttendance);
+            document.getElementById('clearDateBtn').addEventListener('click', function () {
+                document.getElementById('dateFilter').value = '';
+                renderAttendance();
+            });
+
+            document.getElementById('modalCancelBtn').addEventListener('click', closeModal);
+            document.getElementById('modalSaveBtn').addEventListener('click', saveStudent);
+            scanUidBtn.addEventListener('click', simulateRegistrationScan);
+
+            document.getElementById('loginBtn').addEventListener('click', doLogin);
+            document.getElementById('loginPass').addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') doLogin();
+            });
+            document.getElementById('logoutBtn').addEventListener('click', doLogout);
+
+            // Close modal on backdrop click
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) closeModal();
+            });
+
+            // Keyboard escape
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+            });
+
+            // ---------- INIT ----------
+            loadAll();
+
+            // Makes the site installable as an app (needs sw.js and manifest.json in this folder)
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js').catch(function () {});
+            }
+
+            // Expose showPage globally for easy access
+            window.showPage = showPage;
+        })();
+    </script>
+</body>
+</html>
