@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Student Portal</title>
+<style>
+  :root {
+    --bg: #f1f5f9; --card: #ffffff; --text: #0f172a; --muted: #64748b; --border: #e2e8f0;
+    --blue: #2563eb; --blue-text: #ffffff;
+    --green-bg: #dcfce7; --green: #166534; --red-bg: #fee2e2; --red: #991b1b;
+    --amber-bg: #fef3c7; --amber: #92400e; --input: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b1120; --card: #111827; --text: #e2e8f0; --muted: #9ca3af; --border: #1f2937;
+      --blue: #3b82f6; --blue-text: #ffffff;
+      --green-bg: #064e3b; --green: #6ee7b7; --red-bg: #7f1d1d; --red: #fca5a5;
+      --amber-bg: #78350f; --amber: #fcd34d; --input: #1f2937;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 1.2rem; }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 1.4rem; margin-bottom: 1rem; }
+  h1 { font-size: 1.4rem; margin-bottom: 0.3rem; }
+  h2 { font-size: 1.05rem; margin-bottom: 0.8rem; }
+  .muted { color: var(--muted); font-size: 0.9rem; }
+  label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin: 0.9rem 0 0.3rem; }
+  input { width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--border); border-radius: 12px; background: var(--input); color: var(--text); font-size: 1rem; }
+  input:focus { outline: 2px solid var(--blue); outline-offset: 1px; }
+  button { cursor: pointer; border: none; border-radius: 999px; padding: 0.75rem 1.3rem; font-size: 0.95rem; font-weight: 600; background: var(--blue); color: var(--blue-text); }
+  button.ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  button:disabled { opacity: 0.6; cursor: default; }
+  .full { width: 100%; margin-top: 1.2rem; }
+  .error { color: var(--red); font-size: 0.9rem; min-height: 1.2rem; margin-top: 0.7rem; }
+  .ok { color: var(--green); font-size: 0.9rem; margin-top: 0.7rem; }
+  .tabs { display: flex; gap: 0.5rem; margin-bottom: 0.4rem; }
+  .tabs button { flex: 1; background: transparent; color: var(--muted); border: 1px solid var(--border); }
+  .tabs button.active { background: var(--blue); color: var(--blue-text); border-color: var(--blue); }
+  .profile { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .avatar { width: 72px; height: 72px; border-radius: 50%; background: var(--border); overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; flex-shrink: 0; }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .grow { flex: 1; min-width: 160px; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; }
+  .stat { background: var(--bg); border-radius: 14px; padding: 0.8rem; text-align: center; }
+  .stat b { display: block; font-size: 1.5rem; }
+  .stat span { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+  th { text-align: left; color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border); }
+  td { padding: 0.65rem 0.6rem; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  tr:last-child td { border-bottom: none; }
+  .pill { display: inline-block; padding: 0.2rem 0.7rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }
+  .pill.present, .pill.approved { background: var(--green-bg); color: var(--green); }
+  .pill.absent { background: var(--red-bg); color: var(--red); }
+  .pill.late, .pill.pending { background: var(--amber-bg); color: var(--amber); }
+  .notice { background: var(--amber-bg); color: var(--amber); border-radius: 14px; padding: 0.9rem 1rem; font-size: 0.92rem; margin-bottom: 1rem; }
+  .steps { margin: 0.5rem 0 0.2rem 1.2rem; font-size: 0.92rem; }
+  .steps li { margin-bottom: 0.3rem; }
+  .photo-pick { display: flex; align-items: center; gap: 0.9rem; }
+  .photo-pick .avatar { width: 64px; height: 64px; }
+  .photo-pick input { padding: 0.5rem; font-size: 0.85rem; }
+  .empty { text-align: center; color: var(--muted); padding: 1.5rem 0; }
+  .hidden { display: none; }
+  @media (max-width: 480px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- SIGN IN / REGISTER -->
+  <div class="card" id="authCard">
+    <h1>Student Portal</h1>
+    <p class="muted">Sign in to see your own attendance, or register if you are new.</p>
+    <div class="tabs" style="margin-top: 1rem;">
+      <button id="tabSignin" class="active">Sign in</button>
+      <button id="tabRegister">Register</button>
+    </div>
+
+    <div id="signinForm">
+      <label for="sid">Student ID</label>
+      <input id="sid" type="text" autocomplete="username" autocapitalize="characters">
+      <label for="pw">Password</label>
+      <input id="pw" type="password" autocomplete="current-password">
+      <div class="error" id="signinError"></div>
+      <button class="full" id="signinBtn">Sign in</button>
+      <p class="muted" style="margin-top: 1rem;">Forgot your password? Ask your administrator to set a new one.</p>
+    </div>
+
+    <div id="registerForm" class="hidden">
+      <label for="rName">Full name</label>
+      <input id="rName" type="text" autocomplete="name">
+      <label for="rSid">Student ID</label>
+      <input id="rSid" type="text" autocapitalize="characters">
+      <label for="rCourse">Course</label>
+      <input id="rCourse" type="text">
+      <label for="rPw">Choose a password (at least 8 characters)</label>
+      <input id="rPw" type="password" autocomplete="new-password">
+      <label for="rPw2">Repeat the password</label>
+      <input id="rPw2" type="password" autocomplete="new-password">
+      <label for="rPhoto">Your photo (optional)</label>
+      <div class="photo-pick">
+        <div class="avatar" id="rAvatar">&#128100;</div>
+        <input id="rPhoto" type="file" accept="image/*" capture="user">
+      </div>
+      <div class="error" id="registerError"></div>
+      <button class="full" id="registerBtn">Register</button>
+      <p class="muted" style="margin-top: 1rem;">After you register, your administrator has to approve you before your attendance is recorded.</p>
+    </div>
+  </div>
+
+  <!-- AFTER SIGN IN -->
+  <div id="portal" class="hidden">
+    <div class="card">
+      <div class="profile">
+        <div class="avatar" id="avatar">&#128100;</div>
+        <div class="grow">
+          <h1 id="pName"></h1>
+          <p class="muted" id="pMeta"></p>
+          <span class="pill" id="pStatus" style="margin-top: 0.4rem;"></span>
+        </div>
+        <button class="ghost" id="logoutBtn">Sign out</button>
+      </div>
+    </div>
+
+    <div class="notice hidden" id="pendingNotice">
+      Your registration is waiting for your administrator's approval. You can sign in, but your attendance is only recorded after you are approved.
+    </div>
+
+    <div class="card hidden" id="linkCard">
+      <h2>Link your card</h2>
+      <p class="muted">Your card is not linked yet.</p>
+      <ol class="steps">
+        <li>Tap your card on the reader.</li>
+        <li>Then press the button below, within 2 minutes.</li>
+      </ol>
+      <div class="error" id="linkError"></div>
+      <div class="ok hidden" id="linkOk"></div>
+      <button class="full" id="linkBtn">I tapped my card</button>
+    </div>
+
+    <div class="card">
+      <h2>My attendance</h2>
+      <div class="stats">
+        <div class="stat"><b id="sRate">0%</b><span>Attendance</span></div>
+        <div class="stat"><b id="sPresent">0</b><span>Present</span></div>
+        <div class="stat"><b id="sLate">0</b><span>Late</span></div>
+        <div class="stat"><b id="sAbsent">0</b><span>Absent</span></div>
+      </div>
+      <p class="muted" style="margin-top: 0.8rem;" id="sNote"></p>
+    </div>
+
+    <div class="card">
+      <h2>My records</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Time</th><th>Status</th></tr></thead>
+          <tbody id="records"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  var $ = function (id) { return document.getElementById(id); };
+  var photoData = null;
+
+  // Everything from the server goes in with textContent, so nothing can inject code
+  function cell(text) {
+    var td = document.createElement('td');
+    td.textContent = text;
+    return td;
+  }
+
+  function setTab(which) {
+    var register = which === 'register';
+    $('signinForm').classList.toggle('hidden', register);
+    $('registerForm').classList.toggle('hidden', !register);
+    $('tabSignin').classList.toggle('active', !register);
+    $('tabRegister').classList.toggle('active', register);
+  }
+
+  function showAuth(message) {
+    $('portal').classList.add('hidden');
+    $('authCard').classList.remove('hidden');
+    $('signinError').textContent = message || '';
+  }
+
+  // Shrinks a chosen picture to a small JPEG before it is sent
+  function shrinkPhoto(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onerror = function () { reject(new Error('Could not read the picture')); };
+      reader.onload = function () {
+        var img = new Image();
+        img.onerror = function () { reject(new Error('That file is not a picture')); };
+        img.onload = function () {
+          var max = 320;
+          var scale = Math.min(1, max / Math.max(img.width, img.height));
+          var canvas = document.createElement('canvas');
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL('image/jpeg', 0.8));
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function setAvatar(box, photo) {
+    box.textContent = '';
+    if (typeof photo === 'string' && photo.indexOf('data:image/') === 0) {
+      var img = document.createElement('img');
+      img.alt = '';
+      img.src = photo;
+      box.appendChild(img);
+    } else {
+      box.textContent = '\uD83D\uDC64';
+    }
+  }
+
+  function render(data) {
+    $('authCard').classList.add('hidden');
+    $('portal').classList.remove('hidden');
+    var st = data.student;
+
+    $('pName').textContent = st.name;
+    $('pMeta').textContent = st.studentId + ' \u00B7 ' + (st.course || 'N/A') + (st.uid ? ' \u00B7 Card ' + st.uid : '');
+    setAvatar($('avatar'), st.photo);
+
+    var pill = $('pStatus');
+    pill.textContent = st.status === 'approved' ? 'Approved' : 'Waiting for approval';
+    pill.className = 'pill ' + (st.status === 'approved' ? 'approved' : 'pending');
+    $('pendingNotice').classList.toggle('hidden', st.status === 'approved');
+    $('linkCard').classList.toggle('hidden', st.cardLinked);
+
+    var s = data.stats;
+    $('sRate').textContent = s.rate + '%';
+    $('sPresent').textContent = s.present;
+    $('sLate').textContent = s.late;
+    $('sAbsent').textContent = s.absent;
+    $('sNote').textContent = s.daysRecorded
+      ? 'Based on ' + s.daysRecorded + ' recorded day(s).'
+      : 'No attendance has been recorded for you yet.';
+
+    var body = $('records');
+    body.textContent = '';
+    if (!data.records.length) {
+      var tr = document.createElement('tr');
+      var td = document.createElement('td');
+      td.colSpan = 3;
+      td.className = 'empty';
+      td.textContent = 'No records yet';
+      tr.appendChild(td);
+      body.appendChild(tr);
+      return;
+    }
+    data.records.forEach(function (r) {
+      var row = document.createElement('tr');
+      row.appendChild(cell(r.date));
+      row.appendChild(cell(r.time));
+      var td = document.createElement('td');
+      var p = document.createElement('span');
+      var status = String(r.status);
+      p.className = 'pill ' + (status === 'Present' ? 'present' : status === 'Late' ? 'late' : 'absent');
+      p.textContent = status;
+      td.appendChild(p);
+      row.appendChild(td);
+      body.appendChild(row);
+    });
+  }
+
+  function loadMe() {
+    return fetch('/api/student/me')
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (data.loggedIn) render(data); else showAuth('');
+      })
+      .catch(function () { showAuth('Could not reach the server. Try again.'); });
+  }
+
+  // Sends a request and always returns { ok, data }, even if the reply is not JSON
+  function post(url, body) {
+    return fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: body ? JSON.stringify(body) : undefined
+    }).then(function (r) {
+      return r.text().then(function (text) {
+        var data = null;
+        try { data = JSON.parse(text); } catch (e) {}
+        if (data === null) data = { error: 'The server sent an unexpected reply (' + r.status + ').' };
+        return { ok: r.ok, data: data };
+      });
+    });
+  }
+
+  function signin() {
+    $('signinError').textContent = '';
+    post('/api/student/login', { studentId: $('sid').value, password: $('pw').value })
+      .then(function (res) {
+        if (!res.ok) { $('signinError').textContent = res.data.error || 'Sign in failed'; return; }
+        $('pw').value = '';
+        loadMe();
+      })
+      .catch(function () { $('signinError').textContent = 'Could not reach the server. Try again.'; });
+  }
+
+  function register() {
+    var err = $('registerError');
+    err.textContent = '';
+    if (!$('rName').value.trim() || !$('rSid').value.trim()) { err.textContent = 'Enter your full name and your student ID.'; return; }
+    if ($('rPw').value.length < 8) { err.textContent = 'Your password must be at least 8 characters.'; return; }
+    if ($('rPw').value !== $('rPw2').value) { err.textContent = 'The two passwords do not match.'; return; }
+
+    var btn = $('registerBtn');
+    btn.disabled = true;
+    post('/api/student/register', {
+      name: $('rName').value,
+      studentId: $('rSid').value,
+      course: $('rCourse').value,
+      password: $('rPw').value,
+      photo: photoData
+    })
+      .then(function (res) {
+        btn.disabled = false;
+        if (!res.ok) { err.textContent = res.data.error || 'Registration failed'; return; }
+        $('rPw').value = '';
+        $('rPw2').value = '';
+        loadMe();
+      })
+      .catch(function () { btn.disabled = false; err.textContent = 'Could not reach the server. Try again.'; });
+  }
+
+  function linkCard() {
+    $('linkError').textContent = '';
+    $('linkOk').classList.add('hidden');
+    post('/api/student/link-card')
+      .then(function (res) {
+        if (!res.ok) { $('linkError').textContent = res.data.error || 'Could not link the card'; return; }
+        loadMe();
+      })
+      .catch(function () { $('linkError').textContent = 'Could not reach the server. Try again.'; });
+  }
+
+  $('tabSignin').addEventListener('click', function () { setTab('signin'); });
+  $('tabRegister').addEventListener('click', function () { setTab('register'); });
+  $('signinBtn').addEventListener('click', signin);
+  $('pw').addEventListener('keydown', function (e) { if (e.key === 'Enter') signin(); });
+  $('registerBtn').addEventListener('click', register);
+  $('linkBtn').addEventListener('click', linkCard);
+  $('logoutBtn').addEventListener('click', function () {
+    post('/api/student/logout').then(function () { showAuth(''); setTab('signin'); });
+  });
+  $('rPhoto').addEventListener('change', function () {
+    var file = this.files && this.files[0];
+    photoData = null;
+    setAvatar($('rAvatar'), null);
+    $('registerError').textContent = '';
+    if (!file) return;
+    shrinkPhoto(file).then(function (dataUrl) {
+      photoData = dataUrl;
+      setAvatar($('rAvatar'), dataUrl);
+    }).catch(function (e) { $('registerError').textContent = e.message; });
+  });
+
+  loadMe();
+</script>
+</body>
+</html>
